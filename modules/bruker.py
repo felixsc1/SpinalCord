@@ -43,12 +43,22 @@ def read_method_default(file):
     result3 = find_in_method(file, '##\$PVM_SPackArrSliceOrient=\\( 1 \\)\s(.+)')
     return result1, result2, result3
 
-def get_sat_recovery_times(folder):
-    file = os.path.join(folder, 'method')
+def find_method_regex(file, regex, selection=1):
+    result = find_in_method(file, regex, selection)
+    return result
+
+
+def get_sat_recovery_times(file, as_str=True):
+#     file = os.path.join(folder, 'method')
     result = find_in_method(file, '##\$MultiRepTime=\\( \d+ \\)\s(.*)')
     if result == 'unknown':
         print('Warning! Could not find Saturation Reovery times. Is method file in folder? Is it a RAREVTR scan?')
-    return np.array(result.split())
+    if as_str:
+        return result
+    else:
+        # atleast_2d ensures that np.savetext will put values on one line
+        # https://stackoverflow.com/questions/6268657/numpy-savetxt-problems-with-1d-array-writing#6268761
+        return np.atleast_2d(np.array(result.split(), dtype=np.int16))  
 
 
 
