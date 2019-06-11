@@ -12,7 +12,7 @@ def getExcel(excelfile):
 
 
 def cleanup_dimitri(df):
-
+    
     df[df['rat id']==""] = np.NaN
     df['rat id'].fillna(method='ffill', inplace=True)   # fill empty rows that belong to same rat
 
@@ -48,6 +48,9 @@ def cleanup_dimitri(df):
     rename_cols['rm_gm'] = 'GM_mean'
 
     df.rename(columns=rename_cols, inplace=True)
+    
+#     df.replace({'nan',np.nan}, inplace=True)
+    
     return df
 
 
@@ -73,7 +76,10 @@ def insert_BBB_data(df, bbbfile):
 
 
 
-
+def contrast_segment_selection_str(df, contrast, segment, columns):
+	selected_rows = df[(df['location_estimate'] == segment) & (df['acquisition'] == contrast)]
+	df_selection = selected_rows[columns]
+	return df_selection
 
 
 def contrast_segment_selection(df, selection, columns):
